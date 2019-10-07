@@ -1,0 +1,10 @@
+<resources>
+    <string name="app_name">LODMaps</string>
+    <string name="title_activity_maps">LODMaps</string>
+
+    <!-- For Permission Check -->
+    <string name="location_access_required">現在位置を利用することで, 周辺のスポットを探索できます.</string>
+    <string name="ok">許可する</string>
+    <string name="location_permission_granted">位置情報へのアクセスを許可しました.</string>
+    <string name="location_permission_denied">位置情報へのアクセスが拒否されています.</string>
+</resources>
