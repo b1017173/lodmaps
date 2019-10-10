@@ -4,7 +4,11 @@
 
     <!-- For Permission Check -->
     <string name="location_access_required">現在位置を利用することで, 周辺のスポットを探索できます.</string>
-    <string name="ok">許可する</string>
+    <string name="approve">許可する</string>
     <string name="location_permission_granted">位置情報へのアクセスを許可しました.</string>
     <string name="location_permission_denied">位置情報へのアクセスが拒否されています.</string>
+    
+    <!-- For Network error dialog -->
+    <string name="not_connected_network">ネットワークに接続されていません.</string>
+    <string name="setting">設定する</string>
 </resources>
