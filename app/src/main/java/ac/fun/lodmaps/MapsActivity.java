@@ -77,8 +77,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             fusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
         } else {
             // オフラインの場合はそれを伝えるダイアログを出す
-            DialogFragment newFragment = new NoConnectedNetwork();
-            newFragment.show(getSupportFragmentManager(), "noConnectedNetwork");
+            DialogFragment fragment = new NoConnectedNetwork();
+            fragment.show(getSupportFragmentManager(), "noConnectedNetwork");
         }
     }
 

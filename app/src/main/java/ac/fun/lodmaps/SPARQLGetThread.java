@@ -1,7 +1,13 @@
 package ac.fun.lodmaps;
 
+import androidx.fragment.app.DialogFragment;
+import androidx.fragment.app.FragmentActivity;
+
 import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.model.BitmapDescriptor;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.MarkerOptions;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -18,7 +24,7 @@ import java.net.URLEncoder;
 import java.util.ArrayList;
 
 /* スポット情報を扱うクラス */
-public class SPARQLGetThread extends Thread{
+public class SPARQLGetThread extends FragmentActivity {
     private GoogleMap mMap; // スポットを扱うマップ
     private String course_title;   // エンコードされるコース名
 
@@ -109,9 +115,16 @@ public class SPARQLGetThread extends Thread{
             setSparqlResultFromQuery(spot_list, shelter_url);
 
             // 取得した情報を地図へ反映
-
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    //setSpotPinFromFinalList(final_list);
+                }
+            });
         } else {
             // データの取得に失敗した場合ダイアログを表示する
+            DialogFragment fragment = new NoConnectedNetwork();
+            fragment.show(getSupportFragmentManager(), "noConnectedNetwork");
         }
     }
 
@@ -188,5 +201,60 @@ public class SPARQLGetThread extends Thread{
             return false;
         }
         return true;
+    }
+
+    /* スポット情報からピンを生成 */
+    private void setSpotPin(ArrayList<Spot> spot_list) {
+        /* 各スポットアイコン */
+        BitmapDescriptor restaurant = BitmapDescriptorFactory.fromResource(R.drawable.restaurant);
+        BitmapDescriptor photo = BitmapDescriptorFactory.fromResource(R.drawable.photo);
+        BitmapDescriptor playground = BitmapDescriptorFactory.fromResource(R.drawable.playground);
+        BitmapDescriptor shop = BitmapDescriptorFactory.fromResource(R.drawable.shop);
+        BitmapDescriptor hot_spring = BitmapDescriptorFactory.fromResource(R.drawable.hot_spring);
+        BitmapDescriptor event = BitmapDescriptorFactory.fromResource(R.drawable.event);
+        BitmapDescriptor sweets = BitmapDescriptorFactory.fromResource(R.drawable.sweets);
+
+        BitmapDescriptor shelter = BitmapDescriptorFactory.fromResource(R.drawable.shelter);
+        BitmapDescriptor tsunami = BitmapDescriptorFactory.fromResource(R.drawable.tsunami);
+
+        BitmapDescriptor pin01 = BitmapDescriptorFactory.fromResource(R.drawable.pin01);
+        BitmapDescriptor pin02 = BitmapDescriptorFactory.fromResource(R.drawable.pin02);
+        BitmapDescriptor pin03 = BitmapDescriptorFactory.fromResource(R.drawable.pin03);
+        BitmapDescriptor pin04 = BitmapDescriptorFactory.fromResource(R.drawable.pin04);
+        BitmapDescriptor pin05 = BitmapDescriptorFactory.fromResource(R.drawable.pin05);
+        BitmapDescriptor pin06 = BitmapDescriptorFactory.fromResource(R.drawable.pin06);
+        BitmapDescriptor pin07 = BitmapDescriptorFactory.fromResource(R.drawable.pin07);
+        BitmapDescriptor pin08 = BitmapDescriptorFactory.fromResource(R.drawable.pin08);
+        BitmapDescriptor pin09 = BitmapDescriptorFactory.fromResource(R.drawable.pin09);
+        BitmapDescriptor pin10 = BitmapDescriptorFactory.fromResource(R.drawable.pin10);
+        BitmapDescriptor pin11 = BitmapDescriptorFactory.fromResource(R.drawable.pin11);
+        BitmapDescriptor pin12 = BitmapDescriptorFactory.fromResource(R.drawable.pin12);
+        BitmapDescriptor pin13 = BitmapDescriptorFactory.fromResource(R.drawable.pin13);
+        BitmapDescriptor pin14 = BitmapDescriptorFactory.fromResource(R.drawable.pin14);
+        BitmapDescriptor pin15 = BitmapDescriptorFactory.fromResource(R.drawable.pin15);
+        BitmapDescriptor pin16 = BitmapDescriptorFactory.fromResource(R.drawable.pin16);
+        BitmapDescriptor pin17 = BitmapDescriptorFactory.fromResource(R.drawable.pin17);
+        BitmapDescriptor pin18 = BitmapDescriptorFactory.fromResource(R.drawable.pin18);
+        BitmapDescriptor pin19 = BitmapDescriptorFactory.fromResource(R.drawable.pin19);
+        BitmapDescriptor pin20 = BitmapDescriptorFactory.fromResource(R.drawable.pin20);
+
+        // スポットのピンを地図上に表示
+        for (int i = 0; i < spot_list.size(); i++) {
+            Spot target = spot_list.get(i);
+            MarkerOptions mOptions = new MarkerOptions();   // ピンの設定
+            mOptions.position(target.getLocation());  // 位置情報の設定
+            mOptions.title(target.getName());   // スポット名を設定
+            mOptions.snippet(target.getCategory()); // スニペット(サブタイトル)を設定
+
+            boolean is_show = true;
+            // コーススポットかどうかでアイコンを変更する
+            if (target.getCourse() == null) {
+                switch (target.getCategory()) {
+                    case "食べる":
+                        mOptions.icon(restaurant);
+                        break;
+                }
+            }
+        }
     }
 }
