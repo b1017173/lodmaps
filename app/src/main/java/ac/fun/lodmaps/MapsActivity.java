@@ -9,6 +9,7 @@ import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.os.Looper;
 import android.view.View;
+import android.widget.ProgressBar;
 
 import androidx.annotation.NonNull;
 import androidx.core.app.ActivityCompat;
@@ -41,6 +42,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private static final int PERMISSION_REQUEST_LOCATE = 0; // 位置情報のパーミッションをリクエストする時のコード(任意で設定)
     private FusedLocationProviderClient fusedLocationClient;    // 現在地取得のためのGoogle API
     protected Location lastLocation;    // 最後の観測現在地
+
+    private ProgressBar progressBar;
 
     /* activity生成時の処理 */
     @Override
@@ -116,6 +119,23 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     private void stopLocationUpdates() {
         fusedLocationClient.removeLocationUpdates(locationCallback);
+    }
+
+    /* スポット情報の取得 */
+    public void loadSpots(String title, int course_id) {
+        // 地図の読み込み中はダイアログをだす
+        progressBar = findViewById(R.id.progressBar);
+
+        if (course_id == -1) {
+            SPARQLGetThread sgt = new SPARQLGetThread(mMap, "");
+            Thread thread = new Thread(sgt);    // スレッド化
+            thread.start();
+        } else {
+            String course_title = title.replaceAll("[ 　]", "");
+            SPARQLGetThread sgt = new SPARQLGetThread(mMap, course_title);
+            Thread thread = new Thread(sgt);
+            thread.start();
+        }
     }
 
     /* 現在地の取得

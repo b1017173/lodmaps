@@ -7,6 +7,7 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.model.BitmapDescriptor;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
 import org.json.JSONArray;
@@ -24,7 +25,7 @@ import java.net.URLEncoder;
 import java.util.ArrayList;
 
 /* スポット情報を扱うクラス */
-public class SPARQLGetThread extends FragmentActivity {
+public class SPARQLGetThread extends FragmentActivity implements Runnable {
     private GoogleMap mMap; // スポットを扱うマップ
     private String course_title;   // エンコードされるコース名
 
@@ -68,7 +69,7 @@ public class SPARQLGetThread extends FragmentActivity {
                 "%3e%29%0d%0a%7d%0d%0a%0d%0a%7d&output=json";
 
         /* 観光スポットの取得 */
-        ArrayList<Spot> spot_list = new ArrayList<>();
+        final ArrayList<Spot> spot_list = new ArrayList<>();
         if (setSparqlResultFromQuery(spot_list, query_url)) {
             // はこぶらのスポットリスト取得に成功
             if (encoded_course != null) {
@@ -118,7 +119,7 @@ public class SPARQLGetThread extends FragmentActivity {
             runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
-                    //setSpotPinFromFinalList(final_list);
+                    setSpotPin(spot_list);
                 }
             });
         } else {
@@ -157,14 +158,18 @@ public class SPARQLGetThread extends FragmentActivity {
                 JSONObject binding = bindings.getJSONObject(i); // 1つのスポットデータを取得
                 Spot spot = new Spot(null, -1, null, null, null, -1);    // 値を格納する変数
 
-                // コース名・コース順路の取得
+                // コース名の取得
                 try {
                     // データがあれば格納
                     spot.setCourse(binding.getJSONObject("courseName").getString("value"));
-                    spot.setRouteNum(binding.getJSONObject("rootNum").getInt("value"));
                 } catch (JSONException e) {
                     spot.setCourse("noCourse");
-                    spot.setRouteNum(-1);
+                }
+                // コース順路または海抜の取得
+                try {
+                    spot.setNumber(binding.getJSONObject("rootNum").getDouble("value"));
+                } catch (JSONException e) {
+                    spot.setNumber(-1);
                 }
                 // スポット名の取得
                 try {
@@ -217,26 +222,28 @@ public class SPARQLGetThread extends FragmentActivity {
         BitmapDescriptor shelter = BitmapDescriptorFactory.fromResource(R.drawable.shelter);
         BitmapDescriptor tsunami = BitmapDescriptorFactory.fromResource(R.drawable.tsunami);
 
-        BitmapDescriptor pin01 = BitmapDescriptorFactory.fromResource(R.drawable.pin01);
-        BitmapDescriptor pin02 = BitmapDescriptorFactory.fromResource(R.drawable.pin02);
-        BitmapDescriptor pin03 = BitmapDescriptorFactory.fromResource(R.drawable.pin03);
-        BitmapDescriptor pin04 = BitmapDescriptorFactory.fromResource(R.drawable.pin04);
-        BitmapDescriptor pin05 = BitmapDescriptorFactory.fromResource(R.drawable.pin05);
-        BitmapDescriptor pin06 = BitmapDescriptorFactory.fromResource(R.drawable.pin06);
-        BitmapDescriptor pin07 = BitmapDescriptorFactory.fromResource(R.drawable.pin07);
-        BitmapDescriptor pin08 = BitmapDescriptorFactory.fromResource(R.drawable.pin08);
-        BitmapDescriptor pin09 = BitmapDescriptorFactory.fromResource(R.drawable.pin09);
-        BitmapDescriptor pin10 = BitmapDescriptorFactory.fromResource(R.drawable.pin10);
-        BitmapDescriptor pin11 = BitmapDescriptorFactory.fromResource(R.drawable.pin11);
-        BitmapDescriptor pin12 = BitmapDescriptorFactory.fromResource(R.drawable.pin12);
-        BitmapDescriptor pin13 = BitmapDescriptorFactory.fromResource(R.drawable.pin13);
-        BitmapDescriptor pin14 = BitmapDescriptorFactory.fromResource(R.drawable.pin14);
-        BitmapDescriptor pin15 = BitmapDescriptorFactory.fromResource(R.drawable.pin15);
-        BitmapDescriptor pin16 = BitmapDescriptorFactory.fromResource(R.drawable.pin16);
-        BitmapDescriptor pin17 = BitmapDescriptorFactory.fromResource(R.drawable.pin17);
-        BitmapDescriptor pin18 = BitmapDescriptorFactory.fromResource(R.drawable.pin18);
-        BitmapDescriptor pin19 = BitmapDescriptorFactory.fromResource(R.drawable.pin19);
-        BitmapDescriptor pin20 = BitmapDescriptorFactory.fromResource(R.drawable.pin20);
+        BitmapDescriptor[] course_pin = {
+                BitmapDescriptorFactory.fromResource(R.drawable.pin01),
+                BitmapDescriptorFactory.fromResource(R.drawable.pin02),
+                BitmapDescriptorFactory.fromResource(R.drawable.pin03),
+                BitmapDescriptorFactory.fromResource(R.drawable.pin04),
+                BitmapDescriptorFactory.fromResource(R.drawable.pin05),
+                BitmapDescriptorFactory.fromResource(R.drawable.pin06),
+                BitmapDescriptorFactory.fromResource(R.drawable.pin07),
+                BitmapDescriptorFactory.fromResource(R.drawable.pin08),
+                BitmapDescriptorFactory.fromResource(R.drawable.pin09),
+                BitmapDescriptorFactory.fromResource(R.drawable.pin10),
+                BitmapDescriptorFactory.fromResource(R.drawable.pin11),
+                BitmapDescriptorFactory.fromResource(R.drawable.pin12),
+                BitmapDescriptorFactory.fromResource(R.drawable.pin13),
+                BitmapDescriptorFactory.fromResource(R.drawable.pin14),
+                BitmapDescriptorFactory.fromResource(R.drawable.pin15),
+                BitmapDescriptorFactory.fromResource(R.drawable.pin16),
+                BitmapDescriptorFactory.fromResource(R.drawable.pin17),
+                BitmapDescriptorFactory.fromResource(R.drawable.pin18),
+                BitmapDescriptorFactory.fromResource(R.drawable.pin19),
+                BitmapDescriptorFactory.fromResource(R.drawable.pin20),
+        };
 
         // スポットのピンを地図上に表示
         for (int i = 0; i < spot_list.size(); i++) {
@@ -246,15 +253,58 @@ public class SPARQLGetThread extends FragmentActivity {
             mOptions.title(target.getName());   // スポット名を設定
             mOptions.snippet(target.getCategory()); // スニペット(サブタイトル)を設定
 
-            boolean is_show = true;
+            // boolean is_show = true;
             // コーススポットかどうかでアイコンを変更する
             if (target.getCourse() == null) {
                 switch (target.getCategory()) {
                     case "食べる":
                         mOptions.icon(restaurant);
                         break;
+                    case  "見る":
+                        mOptions.icon(photo);
+                        break;
+                    case "遊ぶ":
+                        mOptions.icon(playground);
+                        break;
+                    case "買う":
+                        mOptions.icon(shop);
+                        break;
+                    case "温泉":
+                        mOptions.icon(hot_spring);
+                        break;
+                    case "観光カレンダー":
+                        mOptions.icon(event);
+                        mOptions.snippet("観光イベント"); // ”観光イベント”へ書き換える
+                        break;
+                    case "函館スイーツ":
+                        mOptions.icon(sweets);
+                        break;
+                    case "津波避難所":
+                        mOptions.icon(shelter);
+                        mOptions.snippet("津波避難所 " + target.getNumber() + "m");
+                        break;
+                    case "津波避難ビル":
+                        mOptions.icon(tsunami);
+                        mOptions.snippet("津波避難ビル " + target.getNumber() + "m");
+                        break;
+                }
+            } else {
+                // コーススポットの場合は順路のアイコンを設定
+                int iconNum = (int)target.getNumber() - 1; // コース順路は1から始まるため配列に合わせて-1
+                if (iconNum < 0) {
+                    mOptions.icon(course_pin[0]);
+                } else {
+                    mOptions.icon(course_pin[iconNum]);
                 }
             }
+            Marker marker = mMap.addMarker(mOptions);   // 設定に基づいてマーカーを作成
+            // IDがあった場合はタグとして設定
+            if (target.getId() == -1) {
+                marker.setTag("");
+            } else {
+                marker.setTag(target.getId());
+            }
+            marker.setVisible(true); // マーカーの表示を設定
         }
     }
 }

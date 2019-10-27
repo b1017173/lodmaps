@@ -4,15 +4,15 @@ import com.google.android.gms.maps.model.LatLng;
 
 public class Spot {
     private String course;
-    private int routeNum;
+    private double number;  // コーススポットの場合は順路・避難所の場合は海抜を代入
     private String name;
     private String category;
     private LatLng location;
     private int id;
 
-    public Spot(String course, int routeNum, String name, String category, LatLng location, int id) {
+    public Spot(String course, double number, String name, String category, LatLng location, int id) {
         this.course = course;
-        this.routeNum = routeNum;
+        this.number = number;
         this.name = name;
         this.category = category;
         this.location = location;
@@ -23,8 +23,8 @@ public class Spot {
         return this.course;
     }
 
-    public int getRouteNum() {
-        return this.routeNum;
+    public double getNumber() {
+        return this.number;
     }
 
     public String getName() {
@@ -47,8 +47,8 @@ public class Spot {
         this.course = course;
     }
 
-    public void setRouteNum(int routeNum) {
-        this.routeNum = routeNum;
+    public void setNumber(double number) {
+        this.number = number;
     }
 
     public void setName(String name) {
