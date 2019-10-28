@@ -1,7 +1,6 @@
 package ac.fun.lodmaps;
 
 import androidx.fragment.app.DialogFragment;
-import androidx.fragment.app.FragmentActivity;
 
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.model.BitmapDescriptor;
@@ -25,7 +24,8 @@ import java.net.URLEncoder;
 import java.util.ArrayList;
 
 /* スポット情報を扱うクラス */
-public class SPARQLGetThread extends FragmentActivity implements Runnable {
+// TODO: 継承クラスが正しいか要検討
+public class SPARQLGetThread extends MapsActivity implements Runnable {
     private GoogleMap mMap; // スポットを扱うマップ
     private String course_title;   // エンコードされるコース名
 

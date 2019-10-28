@@ -43,8 +43,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private FusedLocationProviderClient fusedLocationClient;    // 現在地取得のためのGoogle API
     protected Location lastLocation;    // 最後の観測現在地
 
-    private ProgressBar progressBar;
-
     /* activity生成時の処理 */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -90,11 +88,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
 
-        mMap.setMyLocationEnabled(true);
-        // Add a marker in Sydney and move the camera
-        LatLng hakodate = new LatLng(41.788942, 140.752142);
-        mMap.addMarker(new MarkerOptions().position(hakodate).title("Marker in Sydney"));
-        mMap.moveCamera(CameraUpdateFactory.newLatLng(hakodate));
+        mMap.setTrafficEnabled(false);  // 渋滞情報を非表示に設定
     }
 
     /* アプリがアクティブになった場合 */
@@ -122,9 +116,10 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     }
 
     /* スポット情報の取得 */
+
     public void loadSpots(String title, int course_id) {
         // 地図の読み込み中はダイアログをだす
-        progressBar = findViewById(R.id.progressBar);
+        ProgressBar progressBar = findViewById(R.id.progressBar);
 
         if (course_id == -1) {
             SPARQLGetThread sgt = new SPARQLGetThread(mMap, "");
