@@ -25,12 +25,13 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.Marker;
-import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.snackbar.Snackbar;
+
+import java.util.Objects;
 
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback {
 
@@ -70,10 +71,10 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
         // オンラインの場合マップ処理
         if (isOnline(this.getApplicationContext())) {
-            // Obtain the SupportMapFragment and get notified when the map is ready to be used.
+            // SupportMapFragmentを取得し、マップを使用する準備ができたら通知を受け取る
             SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                     .findFragmentById(R.id.map);
-            mapFragment.getMapAsync(this);
+            Objects.requireNonNull(mapFragment).getMapAsync(this);
 
             // 現在地の取得準備
             fusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
@@ -89,15 +90,19 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
 
+        mMap.setMyLocationEnabled(true);    // 現在地ボタンの設定
         mMap.setTrafficEnabled(false);  // 渋滞情報を非表示に設定
-        mMap.setOnInfoWindowClickListener(new GoogleMap.OnInfoWindowClickListener() {
-            @Override
-            public void onInfoWindowClick(Marker marker) {
-                String title = marker.getTitle();
-                String snippet = marker.getSnippet();
-                String id = marker.getId();
-            }
-        });
+        /* マップの初期値を設定
+         * 現在地の情報がない場合は函館駅前(41.772647, 140.728125)を設定 */
+        LatLng location = new LatLng(41.772647, 140.728125);
+        CameraPosition default_position = new CameraPosition
+                .Builder()
+                .target(location)
+                .zoom(16)
+                .build();
+        mMap.moveCamera(CameraUpdateFactory.newCameraPosition(default_position));
+
+        loadSpots("", -1);
     }
 
     /* アプリがアクティブになった場合 */
@@ -125,7 +130,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     }
 
     /* スポット情報の取得 */
-
     public void loadSpots(String title, int course_id) {
         // 地図の読み込み中はダイアログをだす
         ProgressBar progressBar = findViewById(R.id.progressBar);
@@ -155,6 +159,14 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                         if (task.isSuccessful() && task.getResult() != null) {
                             // 現在地の更新
                             lastLocation = task.getResult();
+                            // 地図上のカメラ位置も更新
+                            LatLng location = new LatLng(lastLocation.getLatitude(), lastLocation.getLongitude());
+                            CameraPosition default_position = new CameraPosition
+                                    .Builder()
+                                    .target(location)
+                                    .zoom(16)
+                                    .build();
+                            mMap.moveCamera(CameraUpdateFactory.newCameraPosition(default_position));
                         } else {
                             // 失敗した場合は失敗したことを伝える
                             Snackbar.make(mLayout, R.string.not_get_location,
@@ -175,8 +187,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     /*
     * パーミッション関係
+    * 公式ドキュメント準拠
     * */
-    /* 公式ドキュメント準拠 */
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         // BEGIN_INCLUDE(onRequestPermissionsResult)
@@ -231,12 +243,10 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
         // TODO: (API29以降)非推奨なコードを使っているから推奨コードを使う
         // > NetworkCapabilities とかが候補(？)
-        NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
+        NetworkInfo activeNetwork = Objects.requireNonNull(cm).getActiveNetworkInfo();
 
         // true: 接続あり
-        boolean isConnected = activeNetwork != null &&
+        return activeNetwork != null &&
                 activeNetwork.isConnectedOrConnecting();
-
-        return isConnected;
     }
 }

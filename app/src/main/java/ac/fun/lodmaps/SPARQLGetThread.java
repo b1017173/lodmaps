@@ -1,6 +1,7 @@
 package ac.fun.lodmaps;
 
 import androidx.fragment.app.DialogFragment;
+import androidx.fragment.app.FragmentActivity;
 
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.model.BitmapDescriptor;
@@ -25,7 +26,7 @@ import java.util.ArrayList;
 
 /* スポット情報を扱うクラス */
 // TODO: 継承クラスが正しいか要検討
-public class SPARQLGetThread extends MapsActivity implements Runnable {
+public class SPARQLGetThread extends FragmentActivity implements Runnable {
     private GoogleMap mMap; // スポットを扱うマップ
     private String course_title;   // エンコードされるコース名
 
@@ -178,7 +179,7 @@ public class SPARQLGetThread extends MapsActivity implements Runnable {
                 } catch (JSONException e1) {
                     try {
                         // spotnameはスイーツのデータを参照
-                        spot.setName(binding.getJSONObject("spotname").getString("value"));
+                        spot.setName(binding.getJSONObject("shopname").getString("value"));
                     } catch (JSONException e2) {
                         spot.setName("noName");
                     }
@@ -186,11 +187,11 @@ public class SPARQLGetThread extends MapsActivity implements Runnable {
                 // カテゴリの取得
                 try {
                     // はこぶらのカテゴリデータを参照
-                    spot.setCategory(binding.getJSONObject("spotName").getString("value"));
+                    spot.setCategory(binding.getJSONObject("category").getString("value"));
                     spot.setId(-1);
                 } catch (JSONException e) {
                     // データがない場合はスイーツを指定
-                    spot.setCategory("sweets");
+                    spot.setCategory("スイーツ");
                     // スイーツのスポットの場合idを取得
                     spot.setId(binding.getJSONObject("id").getInt("value"));
                 }
@@ -255,7 +256,7 @@ public class SPARQLGetThread extends MapsActivity implements Runnable {
 
             // boolean is_show = true;
             // コーススポットかどうかでアイコンを変更する
-            if (target.getCourse() == null) {
+            if (target.getCourse().equals("noCourse")) {
                 switch (target.getCategory()) {
                     case "食べる":
                         mOptions.icon(restaurant);
@@ -276,7 +277,7 @@ public class SPARQLGetThread extends MapsActivity implements Runnable {
                         mOptions.icon(event);
                         mOptions.snippet("観光イベント"); // ”観光イベント”へ書き換える
                         break;
-                    case "函館スイーツ":
+                    case "スイーツ":
                         mOptions.icon(sweets);
                         break;
                     case "津波避難所":
