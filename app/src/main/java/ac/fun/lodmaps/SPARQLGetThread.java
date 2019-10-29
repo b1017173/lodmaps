@@ -1,7 +1,5 @@
 package ac.fun.lodmaps;
 
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.widget.ProgressBar;
 
 import androidx.fragment.app.DialogFragment;

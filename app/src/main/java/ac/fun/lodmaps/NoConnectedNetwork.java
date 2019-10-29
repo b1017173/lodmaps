@@ -7,10 +7,12 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.provider.Settings;
 
+import androidx.annotation.NonNull;
 import androidx.fragment.app.DialogFragment;
 
 /* ネットワーク接続がないときのダイアログ */
 public class NoConnectedNetwork extends DialogFragment {
+    @NonNull
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         // ダイアログ生成のためにBuilderを設定
