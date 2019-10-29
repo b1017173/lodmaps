@@ -1,7 +1,10 @@
 package ac.fun.lodmaps;
 
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.widget.ProgressBar;
+
 import androidx.fragment.app.DialogFragment;
-import androidx.fragment.app.FragmentActivity;
 
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.model.BitmapDescriptor;
@@ -26,13 +29,15 @@ import java.util.ArrayList;
 
 /* スポット情報を扱うクラス */
 // TODO: 継承クラスが正しいか要検討
-public class SPARQLGetThread extends FragmentActivity implements Runnable {
+public class SPARQLGetThread extends MapsActivity implements Runnable {
     private GoogleMap mMap; // スポットを扱うマップ
     private String course_title;   // エンコードされるコース名
+    private ProgressBar progressBar;
 
-    SPARQLGetThread(GoogleMap mMap, String course_title) {
+    SPARQLGetThread(GoogleMap mMap, String course_title, ProgressBar progressBar) {
         this.mMap = mMap;
         this.course_title = course_title;
+        this.progressBar = progressBar;
     }
 
     // スポットデータの取得
@@ -307,5 +312,6 @@ public class SPARQLGetThread extends FragmentActivity implements Runnable {
             }
             marker.setVisible(true); // マーカーの表示を設定
         }
+        progressBar.setVisibility(android.widget.ProgressBar.INVISIBLE);    // ぐるぐるを非表示
     }
 }

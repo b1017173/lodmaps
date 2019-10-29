@@ -22,23 +22,18 @@ public class Spot {
     public String getCourse() {
         return this.course;
     }
-
     public double getNumber() {
         return this.number;
     }
-
     public String getName() {
         return this.name;
     }
-
     public String getCategory() {
         return this.category;
     }
-
     public LatLng getLocation() {
         return this.location;
     }
-
     public int getId() {
         return this.id;
     }
@@ -46,23 +41,18 @@ public class Spot {
     public void setCourse(String course) {
         this.course = course;
     }
-
     public void setNumber(double number) {
         this.number = number;
     }
-
     public void setName(String name) {
         this.name = name;
     }
-
     public void setCategory(String category) {
         this.category = category;
     }
-
     public void setLocation(LatLng location) {
         this.location = location;
     }
-
     public void setId(int id) {
         this.id = id;
     }

@@ -52,29 +52,29 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         setContentView(R.layout.activity_maps);
         mLayout = findViewById(R.id.map);
 
-        requestLocatePermission();  // パーミッションをリクエストして位置情報を取得
-        createLocationRequest();    // 位置情報の更新設定を行う
-        // コールバックを得た時の挙動
-        locationCallback = new LocationCallback() {
-            @Override
-            public void onLocationResult(LocationResult locationResult) {
-                if (locationResult == null) {
-                    // 位置情報が得られなかった場合
-                    return;
-                }
-                for (Location location: locationResult.getLocations()) {
-                    // 得られた場合は更新する
-                    lastLocation = location;
-                }
-            }
-        };
-
         // オンラインの場合マップ処理
         if (isOnline(this.getApplicationContext())) {
             // SupportMapFragmentを取得し、マップを使用する準備ができたら通知を受け取る
             SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                     .findFragmentById(R.id.map);
             Objects.requireNonNull(mapFragment).getMapAsync(this);
+
+            requestLocatePermission();  // パーミッションをリクエストして位置情報を取得
+            createLocationRequest();    // 位置情報の更新設定を行う
+            // コールバックを得た時の挙動
+            locationCallback = new LocationCallback() {
+                @Override
+                public void onLocationResult(LocationResult locationResult) {
+                    if (locationResult == null) {
+                        // 位置情報が得られなかった場合
+                        return;
+                    }
+                    for (Location location: locationResult.getLocations()) {
+                        // 得られた場合は更新する
+                        lastLocation = location;
+                    }
+                }
+            };
 
             // 現在地の取得準備
             fusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
@@ -109,7 +109,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     @Override
     protected void onResume() {
         super.onResume();
-        startLocationUpdates();
+        if (isOnline(this.getApplicationContext())) startLocationUpdates();
     }
 
     private void startLocationUpdates() {
@@ -122,7 +122,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     @Override
     protected void onPause() {
         super.onPause();
-        stopLocationUpdates();
+        if (isOnline(this.getApplicationContext())) stopLocationUpdates();
     }
 
     private void stopLocationUpdates() {
@@ -135,12 +135,12 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         ProgressBar progressBar = findViewById(R.id.progressBar);
 
         if (course_id == -1) {
-            SPARQLGetThread sgt = new SPARQLGetThread(mMap, "");
+            SPARQLGetThread sgt = new SPARQLGetThread(mMap, "", progressBar);
             Thread thread = new Thread(sgt);    // スレッド化
             thread.start();
         } else {
             String course_title = title.replaceAll("[ 　]", "");
-            SPARQLGetThread sgt = new SPARQLGetThread(mMap, course_title);
+            SPARQLGetThread sgt = new SPARQLGetThread(mMap, course_title, progressBar);
             Thread thread = new Thread(sgt);
             thread.start();
         }
