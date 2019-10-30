@@ -29,6 +29,7 @@ import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import com.google.android.material.snackbar.Snackbar;
 
 import java.util.Objects;
@@ -45,12 +46,16 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private FusedLocationProviderClient fusedLocationClient;    // 現在地取得のためのGoogle API
     protected Location lastLocation;    // 最後の観測現在地
 
+    private BottomSheetBehavior bottomSheetBehavior;    // ボトムシートの振る舞いを制御
+
     /* activity生成時の処理 */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_maps);
         mLayout = findViewById(R.id.map);
+        View mBottomSheet = findViewById(R.id.bottom_sheet);    // ボトムシートView本体
+        bottomSheetBehavior = BottomSheetBehavior.from(mBottomSheet);
 
         // オンラインの場合マップ処理
         if (isOnline(this.getApplicationContext())) {
