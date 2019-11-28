@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@android:color/white">
+
+    <!--  ヘッダ  -->
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/peek_height"
+        android:background="@color/colorPrimary"
+        android:paddingTop="8dp"
+        android:paddingStart="16dp"
+        android:paddingEnd="16dp"
+        android:paddingBottom="8dp">
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            tools:ignore="UselessParent">
+
+            <TextView
+                android:id="@+id/spot_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/spot_name"
+                android:textColor="@android:color/white"
+                android:textSize="19sp" />
+
+            <TextView
+                android:id="@+id/spot_category"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/category"
+                android:textColor="@android:color/white"
+                android:textSize="14sp"
+                android:layout_marginTop="5dp" />
+        </LinearLayout>
+    </RelativeLayout>
+
+    <!--  スポット写真
+    <-  複数の写真をRecyclerで横並べに配置  -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/image_height"
+        android:orientation="horizontal">
+        
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recyclerImage"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+            
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:contentDescription="@string/imageDescription" />
+        </androidx.recyclerview.widget.RecyclerView>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="16dp">
+
+        <TextView
+            android:id="@+id/spot_text"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+        <TextView
+            android:id="@+id/spot_moreInfo_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="end"
+            android:text="@string/moreInfo"
+            android:textSize="12sp"
+            android:textColor="@color/colorLinkText"/>
+    </LinearLayout>
+</LinearLayout>

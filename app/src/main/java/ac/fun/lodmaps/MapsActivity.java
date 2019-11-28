@@ -29,8 +29,10 @@ import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.android.material.appbar.AppBarLayout;
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import com.google.android.material.snackbar.Snackbar;
+import com.mahc.custombottomsheetbehavior.BottomSheetBehaviorGoogleMapsLike;
 
 import java.util.Objects;
 
@@ -38,6 +40,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     private GoogleMap mMap;
     private View mLayout;
+    private View mBottomSheet;
 
     private LocationRequest locationRequest;    // 位置情報更新用の構成
     private LocationCallback locationCallback;  // 定期的な位置情報更新をするコールバック
@@ -46,7 +49,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private FusedLocationProviderClient fusedLocationClient;    // 現在地取得のためのGoogle API
     protected Location lastLocation;    // 最後の観測現在地
 
-    private BottomSheetBehavior bottomSheetBehavior;    // ボトムシートの振る舞いを制御
+    private BottomSheetBehavior bottomSheetBehavior;
 
     /* activity生成時の処理 */
     @Override
@@ -54,8 +57,23 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_maps);
         mLayout = findViewById(R.id.map);
-        View mBottomSheet = findViewById(R.id.bottom_sheet);    // ボトムシートView本体
+        mBottomSheet = findViewById(R.id.bottom_sheet);
         bottomSheetBehavior = BottomSheetBehavior.from(mBottomSheet);
+
+//        bottomSheetBehavior.setPeekHeight(600);
+//        bottomSheetBehavior.setBottomSheetCallback(new BottomSheetBehavior.BottomSheetCallback() {
+//            @Override
+//            public void onStateChanged(@NonNull View view, int i) {
+//                if (i == BottomSheetBehavior.STATE_HIDDEN) {
+//
+//                }
+//            }
+//
+//            @Override
+//            public void onSlide(@NonNull View view, float v) {
+//
+//            }
+//        });
 
         // オンラインの場合マップ処理
         if (isOnline(this.getApplicationContext())) {

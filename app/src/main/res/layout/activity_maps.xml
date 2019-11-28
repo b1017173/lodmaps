@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
+<androidx.coordinatorlayout.widget.CoordinatorLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/content"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    tools:context=".MapsActivity">
 
     <fragment
         android:id="@+id/map"
@@ -13,39 +14,32 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_alignParentStart="true"
-        android:layout_alignParentTop="true"
-        tools:context=".MapsActivity" />
+        android:layout_alignParentTop="true" />
 
     <ProgressBar
         android:id="@+id/progressBar"
         style="?android:attr/progressBarStyle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_centerInParent="true" />
+        android:layout_centerInParent="true"
+        app:layout_anchor="@+id/map"
+        app:layout_anchorGravity="center" />
 
-    <androidx.coordinatorlayout.widget.CoordinatorLayout
+    <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        app:behavior_peekHeight="@dimen/peek_height"
+        android:id="@+id/bottom_sheet"
+        app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior"
+        app:anchorPoint="@dimen/anchor_point"
+        app:behavior_hideable="false"
+        android:fitsSystemWindows="true">
 
-        <LinearLayout
-            android:id="@+id/bottom_sheet"
+        <include
+            layout="@layout/bottom_sheet_content"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="#ffffff"
-            android:orientation="vertical"
-            android:padding="16dp"
-            app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior"
-            app:behavior_hideable="false"
-            app:behavior_peekHeight="90dp">
-            <TextView
-                android:id="@+id/text"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:gravity="center"
-                android:textColor="#000000"
-                android:textSize="40sp"
-                android:textStyle="bold"
-                android:text="こここここここ"/>
-        </LinearLayout>
-    </androidx.coordinatorlayout.widget.CoordinatorLayout>
-</RelativeLayout>
+            android:layout_height="match_parent"
+            android:fitsSystemWindows="true"/>
+    </androidx.core.widget.NestedScrollView>
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

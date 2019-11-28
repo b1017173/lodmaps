@@ -14,4 +14,10 @@
     <!-- For Network error dialog -->
     <string name="not_connected_network">ネットワークに接続されていません.</string>
     <string name="setting">設定する</string>
+
+    <!-- For Bottom sheet -->
+    <string name="spot_name">スポット名</string>
+    <string name="category">カテゴリー</string>
+    <string name="imageDescription">スポットの写真</string>
+    <string name="moreInfo">もっと見る</string>
 </resources>
