@@ -12,7 +12,7 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="@dimen/peek_height"
-        android:background="@color/colorPrimary"
+        android:background="@color/colorAccent"
         android:paddingTop="8dp"
         android:paddingStart="16dp"
         android:paddingEnd="16dp"
@@ -45,23 +45,24 @@
 
     <!--  スポット写真
     <-  複数の写真をRecyclerで横並べに配置  -->
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/image_height"
-        android:orientation="horizontal">
-        
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/recyclerImage"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
-            
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:contentDescription="@string/imageDescription" />
-        </androidx.recyclerview.widget.RecyclerView>
-    </LinearLayout>
+<!--    <LinearLayout-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="@dimen/image_height"-->
+<!--        android:orientation="horizontal">-->
 
+<!--        <androidx.recyclerview.widget.RecyclerView-->
+<!--            android:id="@+id/recyclerImage"-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="match_parent">-->
+
+<!--            <ImageView-->
+<!--                android:layout_width="wrap_content"-->
+<!--                android:layout_height="match_parent"-->
+<!--                android:contentDescription="@string/imageDescription" />-->
+<!--        </androidx.recyclerview.widget.RecyclerView>-->
+<!--    </LinearLayout>-->
+
+    <!--  スポット概要  -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -80,6 +81,9 @@
             android:layout_gravity="end"
             android:text="@string/moreInfo"
             android:textSize="12sp"
-            android:textColor="@color/colorLinkText"/>
+            android:textColor="@color/colorLinkText" />
     </LinearLayout>
+
+    <!--  スポット情報リスト  -->
+
 </LinearLayout>

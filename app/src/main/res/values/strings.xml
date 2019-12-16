@@ -20,4 +20,5 @@
     <string name="category">カテゴリー</string>
     <string name="imageDescription">スポットの写真</string>
     <string name="moreInfo">もっと見る</string>
+    <string name="list_icon">リストの左のアイコン</string>
 </resources>

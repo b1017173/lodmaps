@@ -86,17 +86,17 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             createLocationRequest();    // 位置情報の更新設定を行う
             // コールバックを得た時の挙動
             locationCallback = new LocationCallback() {
-                @Override
-                public void onLocationResult(LocationResult locationResult) {
-                    if (locationResult == null) {
-                        // 位置情報が得られなかった場合
-                        return;
+                    @Override
+                    public void onLocationResult(LocationResult locationResult) {
+                        if (locationResult == null) {
+                            // 位置情報が得られなかった場合
+                            return;
+                        }
+                        for (Location location: locationResult.getLocations()) {
+                            // 得られた場合は更新する
+                            lastLocation = location;
+                        }
                     }
-                    for (Location location: locationResult.getLocations()) {
-                        // 得られた場合は更新する
-                        lastLocation = location;
-                    }
-                }
             };
 
             // 現在地の取得準備
@@ -113,7 +113,9 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
 
-        mMap.setMyLocationEnabled(true);    // 現在地ボタンの設定
+        if (checkPermissions()) {
+            mMap.setMyLocationEnabled(true);    // 現在地ボタンの設定
+        }
         mMap.setTrafficEnabled(false);  // 渋滞情報を非表示に設定
         /* マップの初期値を設定
          * 現在地の情報がない場合は函館駅前(41.772647, 140.728125)を設定 */
@@ -190,6 +192,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                                     .zoom(16)
                                     .build();
                             mMap.moveCamera(CameraUpdateFactory.newCameraPosition(default_position));
+                            mMap.setMyLocationEnabled(true);    // 現在地ボタンの設定
                         } else {
                             // 失敗した場合は失敗したことを伝える
                             Snackbar.make(mLayout, R.string.not_get_location,
@@ -206,6 +209,11 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         locationRequest.setInterval(10000); // 基本10秒ごとに更新
         locationRequest.setFastestInterval(5000);   // 最速でも5秒はインターバルをおく
         locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);    // 高精度で位置情報を取得する
+    }
+
+    /* パーミッションが通ってるかのチェック */
+    private boolean checkPermissions() {
+        return ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED;
     }
 
     /*
