@@ -29,10 +29,8 @@ import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
-import com.google.android.material.appbar.AppBarLayout;
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import com.google.android.material.snackbar.Snackbar;
-import com.mahc.custombottomsheetbehavior.BottomSheetBehaviorGoogleMapsLike;
 
 import java.util.Objects;
 
@@ -60,21 +58,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         mBottomSheet = findViewById(R.id.bottom_sheet);
         bottomSheetBehavior = BottomSheetBehavior.from(mBottomSheet);
 
-//        bottomSheetBehavior.setPeekHeight(600);
-//        bottomSheetBehavior.setBottomSheetCallback(new BottomSheetBehavior.BottomSheetCallback() {
-//            @Override
-//            public void onStateChanged(@NonNull View view, int i) {
-//                if (i == BottomSheetBehavior.STATE_HIDDEN) {
-//
-//                }
-//            }
-//
-//            @Override
-//            public void onSlide(@NonNull View view, float v) {
-//
-//            }
-//        });
-
         // オンラインの場合マップ処理
         if (isOnline(this.getApplicationContext())) {
             // SupportMapFragmentを取得し、マップを使用する準備ができたら通知を受け取る
@@ -84,7 +67,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
             requestLocatePermission();  // パーミッションをリクエストして位置情報を取得
             createLocationRequest();    // 位置情報の更新設定を行う
-            // コールバックを得た時の挙動
+            // 位置情報のコールバックを得た時の挙動
             locationCallback = new LocationCallback() {
                     @Override
                     public void onLocationResult(LocationResult locationResult) {

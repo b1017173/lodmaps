@@ -1,7 +1,13 @@
 package ac.fun.lodmaps;
 
+import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.Canvas;
+import android.graphics.drawable.Drawable;
 import android.widget.ProgressBar;
 
+import androidx.annotation.DrawableRes;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.DialogFragment;
 
 import com.google.android.gms.maps.GoogleMap;
@@ -217,11 +223,11 @@ public class SPARQLGetThread extends MapsActivity implements Runnable {
         /* 各スポットアイコン */
         BitmapDescriptor restaurant = BitmapDescriptorFactory.fromResource(R.drawable.restaurant);
         BitmapDescriptor photo = BitmapDescriptorFactory.fromResource(R.drawable.photo);
-        BitmapDescriptor playground = BitmapDescriptorFactory.fromResource(R.drawable.playground);
         BitmapDescriptor shop = BitmapDescriptorFactory.fromResource(R.drawable.shop);
         BitmapDescriptor hot_spring = BitmapDescriptorFactory.fromResource(R.drawable.hot_spring);
         BitmapDescriptor event = BitmapDescriptorFactory.fromResource(R.drawable.event);
         BitmapDescriptor sweets = BitmapDescriptorFactory.fromResource(R.drawable.sweets);
+        BitmapDescriptor playground = BitmapDescriptorFactory.fromResource(R.drawable.playground);
 
         BitmapDescriptor shelter = BitmapDescriptorFactory.fromResource(R.drawable.shelter);
         BitmapDescriptor tsunami = BitmapDescriptorFactory.fromResource(R.drawable.tsunami);
@@ -264,7 +270,7 @@ public class SPARQLGetThread extends MapsActivity implements Runnable {
                     case "食べる":
                         mOptions.icon(restaurant);
                         break;
-                    case  "見る":
+                    case "見る":
                         mOptions.icon(photo);
                         break;
                     case "遊ぶ":
