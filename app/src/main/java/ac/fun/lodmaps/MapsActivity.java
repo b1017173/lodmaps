@@ -27,6 +27,7 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
@@ -48,6 +49,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     protected Location lastLocation;    // 最後の観測現在地
 
     private BottomSheetBehavior bottomSheetBehavior;
+    private CustomBottomSheet customBottomSheet;
 
     /* activity生成時の処理 */
     @Override
@@ -55,8 +57,9 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_maps);
         mLayout = findViewById(R.id.map);
-        mBottomSheet = findViewById(R.id.bottom_sheet);
-        bottomSheetBehavior = BottomSheetBehavior.from(mBottomSheet);
+//        mBottomSheet = findViewById(R.id.bottom_sheet);
+//        bottomSheetBehavior = BottomSheetBehavior.from(mBottomSheet);
+        customBottomSheet = new CustomBottomSheet(this, R.id.bottom_sheet);
 
         // オンラインの場合マップ処理
         if (isOnline(this.getApplicationContext())) {
@@ -111,6 +114,15 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         mMap.moveCamera(CameraUpdateFactory.newCameraPosition(default_position));
 
         loadSpots("", -1);
+
+        mMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
+            @Override
+            public boolean onMarkerClick(Marker marker) {
+                /* TODO: marker.getId()でスポットを識別してスポットクラスを取ってくる
+                *  setSpotでセットしてやればBottomSheet更新できるかなぁ  */
+                return false;
+            }
+        });
     }
 
     /* アプリがアクティブになった場合 */
