@@ -57,9 +57,9 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_maps);
         mLayout = findViewById(R.id.map);
-//        mBottomSheet = findViewById(R.id.bottom_sheet);
-//        bottomSheetBehavior = BottomSheetBehavior.from(mBottomSheet);
-        customBottomSheet = new CustomBottomSheet(this, R.id.bottom_sheet);
+        mBottomSheet = findViewById(R.id.bottom_sheet);
+        bottomSheetBehavior = BottomSheetBehavior.from(mBottomSheet);
+//        customBottomSheet = new CustomBottomSheet(this, R.id.bottom_sheet);
 
         // オンラインの場合マップ処理
         if (isOnline(this.getApplicationContext())) {
@@ -120,6 +120,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             public boolean onMarkerClick(Marker marker) {
                 /* TODO: marker.getId()でスポットを識別してスポットクラスを取ってくる
                 *  setSpotでセットしてやればBottomSheet更新できるかなぁ  */
+                loadSpotDetail(marker);
                 return false;
             }
         });
@@ -155,15 +156,22 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         ProgressBar progressBar = findViewById(R.id.progressBar);
 
         if (course_id == -1) {
-            SPARQLGetThread sgt = new SPARQLGetThread(mMap, "", progressBar);
-            Thread thread = new Thread(sgt);    // スレッド化
+            SpotPinThread spt = new SpotPinThread(mMap, "", progressBar);
+            Thread thread = new Thread(spt);    // スレッド化
             thread.start();
         } else {
             String course_title = title.replaceAll("[ 　]", "");
-            SPARQLGetThread sgt = new SPARQLGetThread(mMap, course_title, progressBar);
-            Thread thread = new Thread(sgt);
+            SpotPinThread spt = new SpotPinThread(mMap, course_title, progressBar);
+            Thread thread = new Thread(spt);
             thread.start();
         }
+    }
+
+    /* スポット詳細情報の取得 */
+    public void loadSpotDetail(Marker marker) {
+        SpotDataThread sdt = new SpotDataThread(marker.getTitle(), marker.getSnippet(), marker.getId());
+        Thread thread = new Thread(sdt);
+        thread.start();
     }
 
     /* 現在地の取得

@@ -33,12 +33,12 @@ import java.util.ArrayList;
 
 /* スポット情報を扱うクラス */
 // TODO: 継承クラスが正しいか要検討
-public class SPARQLGetThread extends MapsActivity implements Runnable {
+public class SpotPinThread extends MapsActivity implements Runnable {
     private GoogleMap mMap; // スポットを扱うマップ
     private String course_title;   // エンコードされるコース名
     private ProgressBar progressBar;
 
-    SPARQLGetThread(GoogleMap mMap, String course_title, ProgressBar progressBar) {
+    SpotPinThread(GoogleMap mMap, String course_title, ProgressBar progressBar) {
         this.mMap = mMap;
         this.course_title = course_title;
         this.progressBar = progressBar;
@@ -166,7 +166,7 @@ public class SPARQLGetThread extends MapsActivity implements Runnable {
             /* 各データの要素を取り出し格納 */
             for (int i = 0; i < bindings.length(); i++) {
                 JSONObject binding = bindings.getJSONObject(i); // 1つのスポットデータを取得
-                Spot spot = new Spot(null, -1, null, null, null, -1);    // 値を格納する変数
+                Spot spot = new Spot(null, -1, null, null, null, "");    // 値を格納する変数
 
                 // コース名の取得
                 try {
@@ -197,12 +197,12 @@ public class SPARQLGetThread extends MapsActivity implements Runnable {
                 try {
                     // はこぶらのカテゴリデータを参照
                     spot.setCategory(binding.getJSONObject("category").getString("value"));
-                    spot.setId(-1);
+                    spot.setId("");
                 } catch (JSONException e) {
                     // データがない場合はスイーツを指定
                     spot.setCategory("スイーツ");
                     // スイーツのスポットの場合idを取得
-                    spot.setId(binding.getJSONObject("id").getInt("value"));
+                    spot.setId(binding.getJSONObject("id").getString("value"));
                 }
                 // 位置情報の取得
                 LatLng location = new LatLng(binding.getJSONObject("lat").getDouble("value"), binding.getJSONObject("long").getDouble("value"));
@@ -309,7 +309,7 @@ public class SPARQLGetThread extends MapsActivity implements Runnable {
             }
             Marker marker = mMap.addMarker(mOptions);   // 設定に基づいてマーカーを作成
             // IDがあった場合はタグとして設定
-            if (target.getId() == -1) {
+            if (target.getId().equals("")) {
                 marker.setTag("");
             } else {
                 marker.setTag(target.getId());

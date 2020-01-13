@@ -1,8 +1,10 @@
 package ac.fun.lodmaps;
 
-import android.widget.ImageView;
+import android.graphics.Bitmap;
 
 import com.google.android.gms.maps.model.LatLng;
+
+import java.util.ArrayList;
 
 public class Spot {
     private String course;  // コーススポットの場合はコース名
@@ -10,9 +12,9 @@ public class Spot {
     private String name;    // スポット名
     private String category;    // スポットのカテゴリー
     private LatLng location;    // スポットの座標
-    private int id; // 主キー
+    private String id; // 主キー
 
-    public Spot(String course, double number, String name, String category, LatLng location, int id) {
+    Spot(String course, double number, String name, String category, LatLng location, String id) {
         this.course = course;
         this.number = number;
         this.name = name;
@@ -21,14 +23,14 @@ public class Spot {
         this.id = id;
     }
 
-    /* スポット詳細の基本情報 */
-    private ImageView imageViews[]; // 画像の配列
+    /* 基本情報 */
+    private ArrayList<Bitmap> imageViews = new ArrayList<>(); // 画像の配列
     private String description;    // 概要
     private String area;    // エリア
-    private int postalCode; // 郵便番号
+    private String postalCode; // 郵便番号
     private String address;  // 住所
     private String access;  // アクセス
-    private int phoneNumber;    // 電話番号
+    private String phoneNumber;    // 電話番号
     private String businessHours;   // 営業時間
     private String holiday; // 定休日
     private String parking; // 駐車場
@@ -37,27 +39,14 @@ public class Spot {
 
     /* 以下スイーツスポットの場合のおすすめ商品情報 */
     private String sweetsName;  // 商品名
-    private ImageView sweetsImage;  // 画像
+    private Bitmap sweetsImage;  // 画像
     private String sweetsDescription;   // 説明
-    private int sweetsPrice;    // 値段
+    private String sweetsPrice;    // 値段
     private String sweetsShop;  // 店舗名
     private String shopUrl;    // 店舗サイトへのリンク
 
-    /* 以下映画ロケ地の場合の情報 */
-    private String movieName;   // 映画名
-    private ImageView movieImage;    // 画像
-    private String movieDescription;    // 説明
-    private String movieDirector;   // 監督
-    private String movieActor;  // 役者
-    private String movieUrl;    // 函館フィルムへのリンク
-
-    /* 以下土木スポットの場合の情報 */
-    private String civilName;   // 建設物名
-    private ImageView civilImage;   // 画像
-    private String civilDescription;    // 説明
-    private int civilYear; // 竣工年
-    private String civilCreator; // 製作者
-    private String civilUrl;    // 近代化遺産へのリンク
+    private ArrayList<MovieSpot> movieSpots = new ArrayList<>();
+    private ArrayList<CivilSpot> civilSpots = new ArrayList<>();
 
     public String getCourse() {
         return this.course;
@@ -79,11 +68,11 @@ public class Spot {
         return location;
     }
 
-    public int getId() {
+    public String getId() {
         return id;
     }
 
-    public ImageView[] getImageViews() {
+    public ArrayList<Bitmap> getImageViews() {
         return imageViews;
     }
 
@@ -95,7 +84,7 @@ public class Spot {
         return area;
     }
 
-    public int getPostalCode() {
+    public String getPostalCode() {
         return postalCode;
     }
 
@@ -107,7 +96,7 @@ public class Spot {
         return access;
     }
 
-    public int getPhoneNumber() {
+    public String getPhoneNumber() {
         return phoneNumber;
     }
 
@@ -135,7 +124,7 @@ public class Spot {
         return sweetsName;
     }
 
-    public ImageView getSweetsImage() {
+    public Bitmap getSweetsImage() {
         return sweetsImage;
     }
 
@@ -143,7 +132,7 @@ public class Spot {
         return sweetsDescription;
     }
 
-    public int getSweetsPrice() {
+    public String getSweetsPrice() {
         return sweetsPrice;
     }
 
@@ -153,54 +142,6 @@ public class Spot {
 
     public String getShopUrl() {
         return shopUrl;
-    }
-
-    public String getMovieName() {
-        return movieName;
-    }
-
-    public ImageView getMovieImage() {
-        return movieImage;
-    }
-
-    public String getMovieDescription() {
-        return movieDescription;
-    }
-
-    public String getMovieDirector() {
-        return movieDirector;
-    }
-
-    public String getMovieActor() {
-        return movieActor;
-    }
-
-    public String getMovieUrl() {
-        return movieUrl;
-    }
-
-    public String getCivilName() {
-        return civilName;
-    }
-
-    public ImageView getCivilImage() {
-        return civilImage;
-    }
-
-    public String getCivilDescription() {
-        return civilDescription;
-    }
-
-    public int getCivilYear() {
-        return civilYear;
-    }
-
-    public String getCivilCreator() {
-        return civilCreator;
-    }
-
-    public String getCivilUrl() {
-        return civilUrl;
     }
 
     public void setCourse(String course) {
@@ -223,12 +164,12 @@ public class Spot {
         this.location = location;
     }
 
-    public void setId(int id) {
+    public void setId(String id) {
         this.id = id;
     }
 
-    public void setImageViews(ImageView[] imageViews) {
-        this.imageViews = imageViews;
+    public void setImageViews(Bitmap imageView) {
+        imageViews.add(imageView);
     }
 
     public void setDescription(String description) {
@@ -239,7 +180,7 @@ public class Spot {
         this.area = area;
     }
 
-    public void setPostalCode(int postalCode) {
+    public void setPostalCode(String postalCode) {
         this.postalCode = postalCode;
     }
 
@@ -251,7 +192,7 @@ public class Spot {
         this.access = access;
     }
 
-    public void setPhoneNumber(int phoneNumber) {
+    public void setPhoneNumber(String phoneNumber) {
         this.phoneNumber = phoneNumber;
     }
 
@@ -279,7 +220,7 @@ public class Spot {
         this.sweetsName = sweetsName;
     }
 
-    public void setSweetsImage(ImageView sweetsImage) {
+    public void setSweetsImage(Bitmap sweetsImage) {
         this.sweetsImage = sweetsImage;
     }
 
@@ -287,7 +228,7 @@ public class Spot {
         this.sweetsDescription = sweetsDescription;
     }
 
-    public void setSweetsPrice(int sweetsPrice) {
+    public void setSweetsPrice(String sweetsPrice) {
         this.sweetsPrice = sweetsPrice;
     }
 
@@ -299,11 +240,78 @@ public class Spot {
         this.shopUrl = shopUrl;
     }
 
+    public ArrayList<MovieSpot> getMovieSpots() {
+        return movieSpots;
+    }
+
+    public void setMovieSpots(MovieSpot movieSpot) {
+        this.movieSpots.add(movieSpot);
+    }
+
+    public void setMovieImage(Bitmap bitmap, int movieNo) {
+        this.movieSpots.get(movieNo).setMovieImage(bitmap);
+    }
+
+    public ArrayList<CivilSpot> getCivilSpots() {
+        return civilSpots;
+    }
+
+    public void setCivilSpots(CivilSpot civilSpot) {
+        this.civilSpots.add(civilSpot);
+    }
+
+    public void setCivilImage(Bitmap bitmap, int civilNo) {
+        this.civilSpots.get(civilNo).setCivilImage(bitmap);
+    }
+}
+
+class MovieSpot {
+    /* 以下映画ロケ地の場合の情報 */
+    private String movieName;   // 映画名
+    private Bitmap movieImage;    // 画像
+    private String movieDescription;    // 説明
+    private String movieDirector;   // 監督
+    private String movieActor;  // 役者
+    private String movieUrl;    // 函館フィルムへのリンク
+
+    public MovieSpot(String movieName, Bitmap movieImage, String movieDescription, String movieDirector, String movieActor, String movieUrl) {
+        this.movieName = movieName;
+        this.movieImage = movieImage;
+        this.movieDescription = movieDescription;
+        this.movieDirector = movieDirector;
+        this.movieActor = movieActor;
+        this.movieUrl = movieUrl;
+    }
+
+    public String getMovieName() {
+        return movieName;
+    }
+
+    public Bitmap getMovieImage() {
+        return movieImage;
+    }
+
+    public String getMovieDescription() {
+        return movieDescription;
+    }
+
+    public String getMovieDirector() {
+        return movieDirector;
+    }
+
+    public String getMovieActor() {
+        return movieActor;
+    }
+
+    public String getMovieUrl() {
+        return movieUrl;
+    }
+
     public void setMovieName(String movieName) {
         this.movieName = movieName;
     }
 
-    public void setMovieImage(ImageView movieImage) {
+    public void setMovieImage(Bitmap movieImage) {
         this.movieImage = movieImage;
     }
 
@@ -322,12 +330,55 @@ public class Spot {
     public void setMovieUrl(String movieUrl) {
         this.movieUrl = movieUrl;
     }
+}
+
+class CivilSpot {
+    /* 以下土木スポットの場合の情報 */
+    private String civilName;   // 建設物名
+    private Bitmap civilImage;   // 画像
+    private String civilDescription;    // 説明
+    private String civilYear; // 竣工年
+    private String civilCreator; // 製作者
+    private String civilUrl;    // 近代化遺産へのリンク
+
+    public CivilSpot(String civilName, Bitmap civilImage, String civilDescription, String civilYear, String civilCreator, String civilUrl) {
+        this.civilName = civilName;
+        this.civilImage = civilImage;
+        this.civilDescription = civilDescription;
+        this.civilYear = civilYear;
+        this.civilCreator = civilCreator;
+        this.civilUrl = civilUrl;
+    }
+
+    public String getCivilName() {
+        return civilName;
+    }
+
+    public Bitmap getCivilImage() {
+        return civilImage;
+    }
+
+    public String getCivilDescription() {
+        return civilDescription;
+    }
+
+    public String getCivilYear() {
+        return civilYear;
+    }
+
+    public String getCivilCreator() {
+        return civilCreator;
+    }
+
+    public String getCivilUrl() {
+        return civilUrl;
+    }
 
     public void setCivilName(String civilName) {
         this.civilName = civilName;
     }
 
-    public void setCivilImage(ImageView civilImage) {
+    public void setCivilImage(Bitmap civilImage) {
         this.civilImage = civilImage;
     }
 
@@ -335,7 +386,7 @@ public class Spot {
         this.civilDescription = civilDescription;
     }
 
-    public void setCivilYear(int civilYear) {
+    public void setCivilYear(String civilYear) {
         this.civilYear = civilYear;
     }
 
